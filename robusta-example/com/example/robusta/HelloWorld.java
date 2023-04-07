@@ -1,6 +1,7 @@
 package com.example.robusta;
 
 import java.util.*;
+import org.apache.kafka.clients.producer.KafkaProducer;
 
 class HelloWorld {
     private String foo = "";
@@ -33,7 +34,7 @@ class HelloWorld {
 
     private native void setStringHelloWorld();
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         ArrayList<String> output = HelloWorld.special(new ArrayList<Integer>(List.of(1, 2, 3)), 4);
         System.out.println(output);
 
@@ -52,5 +53,12 @@ class HelloWorld {
         System.out.println("Now h.foo is: \"" + h.foo + "\"");
         h.setStringHelloWorld();
         System.out.println("After setStringHelloWorld() h.foo is: \"" + h.foo + "\"");
+
+        var kafkaProducer = new KafkaProducer();
+
+        kafkaProducer.init("localhostas", false);
+        kafkaProducer.send("localhostas", "topic", "key", "payload");
+        Thread.sleep(10_000);
+        kafkaProducer.close("localhostas");
 	}
 }
