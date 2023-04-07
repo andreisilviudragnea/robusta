@@ -14,7 +14,7 @@ mod jni {
     use crate::GLOBAL_DATA;
     use log::{info, LevelFilter};
     use rdkafka::config::RDKafkaLogLevel;
-    use rdkafka::producer::{BaseRecord, DefaultProducerContext, ThreadedProducer};
+    use rdkafka::producer::BaseRecord;
     use rdkafka::ClientConfig;
     use robusta_jni::convert::{
         Field, IntoJavaValue, Signature, TryFromJavaValue, TryIntoJavaValue,
@@ -101,8 +101,7 @@ mod jni {
 
             client_config.set_log_level(RDKafkaLogLevel::Debug);
 
-            let producer: ThreadedProducer<DefaultProducerContext> =
-                client_config.create().expect("Producer creation failed");
+            let producer = client_config.create().expect("Producer creation failed");
 
             let mut map = GLOBAL_DATA.write().unwrap();
 
