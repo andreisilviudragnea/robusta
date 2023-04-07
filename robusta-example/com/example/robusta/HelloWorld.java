@@ -57,7 +57,7 @@ class HelloWorld {
         var kafkaProducer = new KafkaProducer();
 
         kafkaProducer.init("localhost:9092", false);
-        kafkaProducer.send("localhost:9092", "my-topic", "key", "payload");
+        kafkaProducer.send("localhost:9092", "quickstart-events", "key", "payload");
         Thread.sleep(10_000);
         kafkaProducer.close("localhost:9092");
 	}

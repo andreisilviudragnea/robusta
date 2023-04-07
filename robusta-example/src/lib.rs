@@ -23,6 +23,8 @@ mod jni {
     use robusta_jni::jni::errors::Result as JniResult;
     use robusta_jni::jni::objects::AutoLocal;
     use robusta_jni::jni::JNIEnv;
+    use simple_logger::SimpleLogger;
+    use log::{info, LevelFilter};
 
     #[derive(Signature, TryIntoJavaValue, IntoJavaValue, TryFromJavaValue)]
     #[package(com.example.robusta)]
@@ -83,10 +85,16 @@ mod jni {
         pub extern "java" fn new(env: &'borrow JNIEnv<'env>) -> JniResult<Self> {}
 
         pub extern "jni" fn init(self, bootstrap_servers: String, use_ssl: bool) -> JniResult<()> {
+            SimpleLogger::new()
+                .with_level(LevelFilter::Info)
+                .init()
+                .unwrap();
+
             let mut client_config = ClientConfig::new();
 
-            client_config.set("compression.type", "lz4");
+            // client_config.set("compression.type", "lz4");
 
+            info!("bootstrap.servers {}", bootstrap_servers);
             client_config.set("bootstrap.servers", bootstrap_servers.clone());
             if use_ssl {
                 client_config.set("security.protocol", "SSL");
@@ -123,7 +131,7 @@ mod jni {
                     .payload(&payload),
             );
 
-            producer.poll(Duration::from_millis(100));
+            // producer.poll(Duration::from_millis(100));
 
             println!("Send result {result:?}");
 
