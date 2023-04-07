@@ -11,11 +11,11 @@ static GLOBAL_DATA: Lazy<RwLock<HashMap<String, ThreadedProducer<DefaultProducer
 
 #[bridge]
 mod jni {
-    use std::time::Duration;
     use crate::GLOBAL_DATA;
+    use log::{info, LevelFilter};
+    use rdkafka::config::RDKafkaLogLevel;
     use rdkafka::producer::{BaseRecord, DefaultProducerContext, ThreadedProducer};
     use rdkafka::ClientConfig;
-    use rdkafka::config::RDKafkaLogLevel;
     use robusta_jni::convert::{
         Field, IntoJavaValue, Signature, TryFromJavaValue, TryIntoJavaValue,
     };
@@ -24,7 +24,6 @@ mod jni {
     use robusta_jni::jni::objects::AutoLocal;
     use robusta_jni::jni::JNIEnv;
     use simple_logger::SimpleLogger;
-    use log::{info, LevelFilter};
 
     #[derive(Signature, TryIntoJavaValue, IntoJavaValue, TryFromJavaValue)]
     #[package(com.example.robusta)]
@@ -130,8 +129,6 @@ mod jni {
                     .key(&key)
                     .payload(&payload),
             );
-
-            // producer.poll(Duration::from_millis(100));
 
             println!("Send result {result:?}");
 

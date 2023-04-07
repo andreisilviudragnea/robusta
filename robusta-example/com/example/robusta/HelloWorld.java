@@ -58,7 +58,7 @@ class HelloWorld {
 
         kafkaProducer.init("localhost:9092", false);
         kafkaProducer.send("localhost:9092", "quickstart-events", "key", "payload");
-        Thread.sleep(10_000);
+        Thread.sleep(1_000);
         kafkaProducer.close("localhost:9092");
 	}
 }
